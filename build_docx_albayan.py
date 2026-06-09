@@ -3,6 +3,7 @@
 Build the SLR article (ENGLISH) on top of the Al-Bayan journal template,
 preserving its styles, headers/footers, and footnote citation system.
 """
+import os
 import zipfile, shutil, re
 from docx import Document
 from docx.shared import Pt, Cm
@@ -109,6 +110,14 @@ def caption(text):
     P(align="center", line=1.0, after=8, before=2)
     p = doc.paragraphs[-1]
     run(p, text, italic=True, size=10)
+
+def add_image(path, width_cm, caption_text):
+    P(align="center", line=1.0, after=2, before=4)
+    p = doc.paragraphs[-1]
+    if os.path.exists(path):
+        run_el = p.add_run()
+        run_el.add_picture(path, width=Cm(width_cm))
+    caption(caption_text)
 
 # =====================================================================
 # TITLE + AUTHORS
@@ -299,7 +308,12 @@ run(p, "Selection proceeded in five PRISMA-based stages: identification, de-dupl
 "a seven-item quality-assessment checklist scored Yes = 1, Partially = 0.5, No = 0 (maximum = 7), covering "
 "clarity of aim, relevance to Islamic/Sharia financial literacy, focus on Generation Z/Muslim youth, "
 "clarity of method, evidential support of findings, implications for Islamic economics/education/behaviour, "
-"and acknowledgement of limitations. Studies scoring \u2265 4.0 of 7 (\u2248 57%) were retained.")
+"and acknowledgement of limitations. Studies scoring \u2265 4.0 of 7 (\u2248 57%) were retained. The selection "
+"process is summarised in the PRISMA 2020 flow diagram (Figure 1).")
+
+add_image("prisma_flow.png", 13.5,
+    "Figure 1. PRISMA 2020 flow diagram of the study selection process "
+    "(counts illustrative; to be finalised upon complete extraction).")
 
 subheading("Data Extraction and Synthesis")
 body_para()
